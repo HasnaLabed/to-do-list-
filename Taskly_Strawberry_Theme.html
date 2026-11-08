@@ -213,6 +213,68 @@ button.small { padding: 8px 11px; font-size: 13px; }
   .task { align-items: flex-start; gap: 10px; padding: 13px; }
   .actions { flex-direction: column; }
   .actions button { min-width: 65px; }
+  /* Dark Mode */
+body.dark-mode {
+  --bg: #211e25;
+  --surface: #302b34;
+  --surface-soft: #3b333e;
+  --ink: #f5e9ed;
+  --muted: #c0adb7;
+  --line: #51434f;
+  --primary: #d889a0;
+  --primary-dark: #e5a2b4;
+  --primary-soft: #493440;
+  --green: #83c9a7;
+  --red: #ee858b;
+  --amber: #e6b96f;
+  --shadow: 0 12px 32px rgba(0, 0, 0, .25);
+
+  color-scheme: dark;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body.dark-mode .hero {
+  color: var(--ink);
+}
+
+body.dark-mode input,
+body.dark-mode select {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+body.dark-mode .task {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+body.dark-mode .modal {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+body.dark-mode .theme-toggle {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.theme-toggle {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 600;
+  transition: .25s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+}
 }
 </style>
 </head>
@@ -224,6 +286,9 @@ button.small { padding: 8px 11px; font-size: 13px; }
       <div><h1>Taskly</h1><p>Make space for what matters.</p></div>
     </div>
     <div class="date" id="today"></div>
+    <button type="button" id="themeToggle" class="theme-toggle">
+  🌙 Dark Mode
+</button>
   </header>
 
   <section class="hero" aria-labelledby="heroTitle">
@@ -285,6 +350,32 @@ let tasks = loadTasks();
 let currentFilter = "all";
 let editingId = null;
 const $ = id => document.getElementById(id);
+  // Dark Mode Feature
+
+const themeToggle = $("themeToggle");
+
+function applyTheme(isDark) {
+  document.body.classList.toggle("dark-mode", isDark);
+
+  themeToggle.textContent = isDark
+    ? "☀️ Light Mode"
+    : "🌙 Dark Mode";
+}
+
+const savedTheme = localStorage.getItem("taskly_theme");
+
+applyTheme(savedTheme === "dark");
+
+themeToggle.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark-mode");
+
+  applyTheme(isDark);
+
+  localStorage.setItem(
+    "taskly_theme",
+    isDark ? "dark" : "light"
+  );
+});
 
 function loadTasks() {
   try {
