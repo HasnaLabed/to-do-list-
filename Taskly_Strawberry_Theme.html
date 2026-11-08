@@ -350,6 +350,32 @@ let tasks = loadTasks();
 let currentFilter = "all";
 let editingId = null;
 const $ = id => document.getElementById(id);
+  // Dark Mode Feature
+
+const themeToggle = $("themeToggle");
+
+function applyTheme(isDark) {
+  document.body.classList.toggle("dark-mode", isDark);
+
+  themeToggle.textContent = isDark
+    ? "☀️ Light Mode"
+    : "🌙 Dark Mode";
+}
+
+const savedTheme = localStorage.getItem("taskly_theme");
+
+applyTheme(savedTheme === "dark");
+
+themeToggle.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark-mode");
+
+  applyTheme(isDark);
+
+  localStorage.setItem(
+    "taskly_theme",
+    isDark ? "dark" : "light"
+  );
+});
 
 function loadTasks() {
   try {
